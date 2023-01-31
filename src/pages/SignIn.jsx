@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 // sign in authentication
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { ReactComponent as ArrowRightIcon } from "../assets/svg/keyboardArrowRightIcon.svg";
 import visiblityIcon from "../assets/svg/visibilityIcon.svg";
-import { async } from "@firebase/util";
 
+// if we do refresh the component renders before it get the data from firebase
+//that why it is showing not logged in in refresh
 export default function SignIn() {
   const [formdData, setFormData] = useState({
     email: "",
@@ -36,12 +38,23 @@ export default function SignIn() {
         email,
         password
       );
-      console.log('usercredential=>',useCredentials);
+      //here i will get the full usercredential object
+      console.log("usercredential=>", useCredentials);
       if (useCredentials.user) {
         navigate("/");
       }
     } catch (error) {
-      console.log(error);
+      // toast.error('Invalid Credential');
+      toast("Invalid Credential", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
   };
 

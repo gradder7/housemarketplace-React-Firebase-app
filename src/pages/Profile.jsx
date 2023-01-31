@@ -6,6 +6,7 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const auth = getAuth();
   useEffect(() => {
+    // we will get current user object only  from userCrendial objects
     console.log(auth.currentUser);
     setUser(auth.currentUser);
   }, []);

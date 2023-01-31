@@ -14,6 +14,7 @@ import { db } from "../firebase.config";
 import { ReactComponent as ArrowRightIcon } from "../assets/svg/keyboardArrowRightIcon.svg";
 import visiblityIcon from "../assets/svg/visibilityIcon.svg";
 import { async } from "@firebase/util";
+import { toast } from "react-toastify";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -48,7 +49,7 @@ export default function SignUp() {
         email,
         password
       );
-      // get the user info here for db
+      // get the user oobject only from th userCredential Object
       const user = userCredentials.user;
       // updating the display name
       updateProfile(auth.currentUser, {
@@ -70,7 +71,17 @@ export default function SignUp() {
       // after where to navigate
       navigate("/");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error('Something went Wrong Plzz try again!',{
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }
   };
 
