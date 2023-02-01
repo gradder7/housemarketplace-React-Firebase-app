@@ -3,12 +3,13 @@ import Navbar from "./components/Navbar";
 import Explore from "./pages/Explore";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ForgetPassword from "./pages/ForgetPassword";
 import Offers from "./pages/Offers";
 import Profile from "./pages/Profile";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import PrivateRoute from "./components/PrivateRoute";
+import ForgotPassword from "./pages/ForgotPassword";
+
 function App() {
   return (
     <>
@@ -30,7 +31,7 @@ function App() {
 
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/forgot-password" element={<ForgetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword/>} />
         </Routes>
         {/* navbar component */}
         <Navbar />

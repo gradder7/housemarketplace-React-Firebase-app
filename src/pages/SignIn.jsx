@@ -42,28 +42,20 @@ export default function SignIn() {
       console.log("usercredential=>", useCredentials);
       if (useCredentials.user) {
         navigate("/");
-              toast.success("Welcome!", {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-              });
+        toast.success("Welcome!", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       }
     } catch (error) {
-      // toast.error('Invalid Credential');
-      toast("Invalid Credential", {
-        position: "top-right",
+      toast.error("Invalid Credential", {
         autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
       });
     }
   };

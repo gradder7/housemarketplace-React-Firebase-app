@@ -70,6 +70,16 @@ export default function SignUp() {
       await setDoc(doc(db, "users", user.uid), formDataCpy);
       // after where to navigate
       navigate("/");
+           toast.success("Signed Up SucessFully! ", {
+             position: "top-right",
+             autoClose: 2000,
+             hideProgressBar: false,
+             closeOnClick: true,
+             pauseOnHover: true,
+             draggable: true,
+             progress: undefined,
+             theme: "colored",
+           });
     } catch (error) {
       // console.log(error);
       toast.error('Something went Wrong Plzz try again!',{
