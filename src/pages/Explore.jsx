@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import rentCategoryImage from "../assets/jpg/rentCategoryImage.jpg";
 import sellCategoryImage from "../assets/jpg/sellCategoryImage.jpg";
+import AllListings from "./AllListings";
 
 export default function Explore() {
   return (
@@ -31,6 +32,7 @@ export default function Explore() {
           </Link>
         </div>
       </main>
+      {/* <AllListings /> */}
     </div>
   );
 }

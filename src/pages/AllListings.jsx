@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -7,14 +8,13 @@ import {
   where,
   orderBy,
   limit,
-  startAfter,
 } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import ListingItem from "../components/ListingItem";
 
-function Offers() {
+export default function AllListings() {
   const [listings, setListings] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -23,43 +23,46 @@ function Offers() {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        // Get reference
+        //get refernce of the collection
         const listingsRef = collection(db, "listings");
 
-        // Create a query
+        //create a query
+        //where(check and compare value though which data should be filterd)
         const q = query(
           listingsRef,
-          where("offer", "==", true),
           orderBy("timestamp", "desc"),
           limit(10)
         );
 
-        // Execute query
+        //execute the query
         const querySnap = await getDocs(q);
-
+        // listings will be array of objects containing id and the data
         const listings = [];
-
+        console.log("Query=>", querySnap);
         querySnap.forEach((doc) => {
+          // data() to get our data
+          //we get the onbjects of the listings
+          //   console.log(doc.data());
+          //give id if the doc it is seprate from data()
+          // console.log(doc.id);
           return listings.push({
             id: doc.id,
             data: doc.data(),
           });
         });
-
         setListings(listings);
         setLoading(false);
       } catch (error) {
-        toast.error("Could not fetch listings");
+        toast.error("Could not fetch Listings!");
       }
     };
-
     fetchListings();
   }, []);
 
   return (
     <div className="category">
       <header>
-        <p className="pageHeader">Offers</p>
+      <h1>ALL</h1>
       </header>
 
       {loading ? (
@@ -79,9 +82,8 @@ function Offers() {
           </main>
         </>
       ) : (
-        <p>There are no current offers</p>
+        <p>No Property</p>
       )}
     </div>
   );
 }
-export default Offers;
