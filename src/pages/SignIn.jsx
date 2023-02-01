@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { ReactComponent as ArrowRightIcon } from "../assets/svg/keyboardArrowRightIcon.svg";
 import visiblityIcon from "../assets/svg/visibilityIcon.svg";
+import OAuth from "../components/OAuth";
 
 // if we do refresh the component renders before it get the data from firebase
 //that why it is showing not logged in in refresh
@@ -103,6 +104,7 @@ export default function SignIn() {
             </div>
           </form>
           {/* google OAuth */}
+          <OAuth/>
 
           <Link to="/sign-up" className="registerLink">
             Sign Up
