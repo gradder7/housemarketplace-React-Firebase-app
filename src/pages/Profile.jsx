@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { getAuth } from "firebase/auth";
+import { getAuth, updateProfile } from "firebase/auth";
+import { db } from "../firebase.config";
+import { updateDoc, doc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Profile() {
   const auth = getAuth();
@@ -10,6 +13,7 @@ export default function Profile() {
     name: auth.currentUser.displayName,
     email: auth.currentUser.email,
   });
+  const [chnageDetails, SetChangeDetails] = useState(false);
 
   const { name, email } = formData;
   // useEffect(() => {
@@ -17,9 +21,42 @@ export default function Profile() {
   //   console.log(auth.currentUser);
   //   setUser(auth.currentUser);
   // }, []);
+  // on logout
   const onLogout = () => {
     auth.signOut();
     navigate("/");
+  };
+  const onSubmit = async () => {
+    console.log(123);
+
+    try {
+      if (auth.currentUser.displayName !== name) {
+        //update the displayname in firebase
+        await updateProfile(auth.currentUser, {
+          displayName: name,
+        });
+
+        //update in db
+        const userRef = doc(db, "users", auth.currentUser.uid);
+        await updateDoc(userRef, {
+          name: name,
+        });
+        toast.success("sucessfull");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("SomeThing went wrong!");
+    }
+  };
+
+  const onChange = (e) => {
+    const { id, value } = e.target;
+    setFormdata((prevData) => ({
+      ...prevData,
+      // store the value wrt to the id of that element
+      [id]: value,
+    }));
+    console.log(formData);
   };
   return (
     <>
@@ -30,6 +67,49 @@ export default function Profile() {
             Logout
           </button>
         </header>
+        <main>
+          <div className="profileDetailsHeader">
+            <p className="profileDetailsText">Personal Details</p>
+            <p
+              className="changePersonalDetails"
+              onClick={() => {
+                //if true got to onsubmit
+                chnageDetails && onSubmit();
+                SetChangeDetails((prev) => !prev);
+              }}
+            >
+              {chnageDetails ? "done" : "change"}
+            </p>
+          </div>
+          <div className="profileCard">
+            <form>
+              {/* active inactive input tag */}
+              <input
+                type="text"
+                id="name"
+                //if false
+                className={!chnageDetails ? "profileName" : "profileNameActive"}
+                // if false than disable
+                disabled={!chnageDetails}
+                value={name}
+                onChange={onChange}
+              />
+
+              <input
+                type="text"
+                id="email"
+                //if false
+                className={
+                  !chnageDetails ? "profileEmail" : "profileEmailActive"
+                }
+                // if false than disable
+                disabled={!chnageDetails}
+                value={email}
+                onChange={onChange}
+              />
+            </form>
+          </div>
+        </main>
       </div>
     </>
   );

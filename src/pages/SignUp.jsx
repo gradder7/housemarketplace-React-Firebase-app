@@ -27,8 +27,8 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   const handleOnChnage = (e) => {
-    // take the values from th target
-    // fro other fields also we can use it
+    // take the values from the target
+    // from other fields also we can use it
     const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
