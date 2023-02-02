@@ -11,6 +11,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import Category from "./pages/Category";
 import AllListings from "./pages/AllListings";
+import CreateListingPage from "./pages/CreateListingPage";
 
 function App() {
   return (
@@ -23,8 +24,8 @@ function App() {
           </Route> */}
           <Route path="/offers" element={<Offers />} />
           <Route path="/category/:categoryName" element={<Category />} />
-          {/* <Route path="/profile" element={<Profile />} /> */}
 
+          {/* <Route path="/profile" element={<Profile />} /> */}
           {/* private route */}
           <Route path="/profile" element={<PrivateRoute />}>
             {/* this is the child which outlet look to render  */}
@@ -34,6 +35,7 @@ function App() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/create-listing" element={<CreateListingPage />} />
         </Routes>
         {/* navbar component */}
         <Navbar />
