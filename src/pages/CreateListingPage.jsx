@@ -10,7 +10,7 @@ import {
 // unique id
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../firebase.config";
-import { addDoc,collection,serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
@@ -116,7 +116,7 @@ export default function CreateListingPage() {
     } else {
       geolocation.lat = latitude;
       geolocation.lng = longitude;
-      location = address;
+      // location = address;
     }
 
     // ---------------Storage-----------------------//
@@ -172,17 +172,23 @@ export default function CreateListingPage() {
     });
 
     // console.log(imgUrls);
+       const formDataCopy = {
+         ...formData,
+         imgUrls,
+         geolocation,
+         timestamp: serverTimestamp(),
+       };
 
-    // submit listinings
-    const formDataCopy={
-      ...formData,
-      imgUrls,
-      geolocation,
-      timestamp:serverTimestamp(),
-    }
+       delete formDataCopy.images;
+       delete formDataCopy.address;
+      //  location && (formDataCopy.location = location);
+      formDataCopy.location=address;
+       !formDataCopy.offer && delete formDataCopy.discountedPrice;
 
-    setLoading(false);
-
+       const docRef = await addDoc(collection(db, "listings"), formDataCopy);
+       setLoading(false);
+       toast.success("Listing saved");
+       navigate(`/category/${formDataCopy.type}/${docRef.id}`);
     // console.log(formData);
   };
 
