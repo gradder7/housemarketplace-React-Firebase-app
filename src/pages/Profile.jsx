@@ -2,14 +2,27 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { getAuth, updateProfile } from "firebase/auth";
 import { db } from "../firebase.config";
-import { updateDoc, doc } from "firebase/firestore";
+import {
+  updateDoc,
+  doc,
+  getDocs,
+  collection,
+  query,
+  orderBy,
+  deleteDoc,
+  where,
+} from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import arrowRight from '../assets/svg/keyboardArrowRightIcon.svg';
-import homeIcon from '../assets/svg/homeIcon.svg';
+import arrowRight from "../assets/svg/keyboardArrowRightIcon.svg";
+import homeIcon from "../assets/svg/homeIcon.svg";
+import ListingItem from "../components/ListingItem";
+import { async } from "@firebase/util";
 
 export default function Profile() {
   const auth = getAuth();
+  const [listings, setListings] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [formData, setFormdata] = useState({
     name: auth.currentUser.displayName,
@@ -23,6 +36,34 @@ export default function Profile() {
   //   console.log(auth.currentUser);
   //   setUser(auth.currentUser);
   // }, []);
+  useEffect(() => {
+    const fetchUserListings = async () => {
+      const listingsRef = collection(db, "listings");
+
+      const q = query(
+        listingsRef,
+        where("userRef", "==", auth.currentUser.uid),
+        orderBy("timestamp", "desc")
+      );
+
+      const querySnap = await getDocs(q);
+
+      let listings = [];
+
+      querySnap.forEach((doc) => {
+        return listings.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+      });
+      // console.log('hjimansu',listings);
+
+      setListings(listings);
+      setLoading(false);
+    };
+
+    fetchUserListings();
+  }, [auth.currentUser.uid]);
   // on logout
   const onLogout = () => {
     auth.signOut();
@@ -59,6 +100,19 @@ export default function Profile() {
       [id]: value,
     }));
     console.log(formData);
+  };
+  const onDelete = async (listingId) => {
+    if (window.confirm("Are you sure you want to delete?")) {
+      // delete from firebase
+      const docRef = doc(db, "listings", listingId);
+      await deleteDoc(docRef);
+      // show updated listings in browser
+      const updatedListings = listings.filter(
+        (listing) => listing.id !== listingId
+      );
+      setListings(updatedListings);
+      toast.success("Successfully deleted listing");
+    }
   };
   return (
     <>
@@ -112,11 +166,27 @@ export default function Profile() {
             </form>
           </div>
 
-          <Link to='/create-listing' className="createListing">
+          <Link to="/create-listing" className="createListing">
             <img src={homeIcon} alt="home" />
             <p>Sell or rent you home </p>
             <img src={arrowRight} alt="arrow-right" />
           </Link>
+          {/* listing in profile the list */}
+          {!loading && listings?.length > 0 && (
+            <>
+              <p className="listingText">Your Listings</p>
+              <ul className="listingsList">
+                {listings.map((listing) => (
+                  <ListingItem
+                    key={listing.id}
+                    listing={listing.data}
+                    id={listing.id}
+                    onDelete={() => onDelete(listing.id)}
+                  />
+                ))}
+              </ul>
+            </>
+          )}
         </main>
       </div>
     </>

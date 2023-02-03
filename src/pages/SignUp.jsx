@@ -13,7 +13,6 @@ import { db } from "../firebase.config";
 
 import { ReactComponent as ArrowRightIcon } from "../assets/svg/keyboardArrowRightIcon.svg";
 import visiblityIcon from "../assets/svg/visibilityIcon.svg";
-import { async } from "@firebase/util";
 import { toast } from "react-toastify";
 import OAuth from "../components/OAuth";
 

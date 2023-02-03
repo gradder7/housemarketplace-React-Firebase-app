@@ -2,37 +2,39 @@ import React from "react";
 import { Link } from "react-router-dom";
 import rentCategoryImage from "../assets/jpg/rentCategoryImage.jpg";
 import sellCategoryImage from "../assets/jpg/sellCategoryImage.jpg";
-import AllListings from "./AllListings";
+import Slider from "../components/Slider";
 
 export default function Explore() {
-  return (
-    <div className="explore">
+  return  (
+    <div className='explore'>
       <header>
-        <p className="pageHeader">Explore</p>
+        <p className='pageHeader'>Explore</p>
       </header>
+
       <main>
-        {/* slider */}
-        <p className="exploreCategoryHeading">Categories</p>
-        <div className="exploreCategories">
-          <Link to="/category/rent">
+      {/* slider */}
+        <Slider />
+        <p className='exploreCategoryHeading'>Categories</p>
+        <div className='exploreCategories'>
+          <Link to='/category/rent'>
             <img
               src={rentCategoryImage}
-              alt="rentImg"
-              className="exploreCategoryImg"
+              alt='rent'
+              className='exploreCategoryImg'
             />
-            <p className="exploreCategoryName">Places for rent</p>
+            <p className='exploreCategoryName'>Places for rent</p>
           </Link>
-          <Link to="/category/sale">
+          <Link to='/category/sale'>
             <img
               src={sellCategoryImage}
-              alt="sellImg"
-              className="exploreCategoryImg"
+              alt='sell'
+              className='exploreCategoryImg'
             />
-            <p className="exploreCategoryName">Places for sale</p>
+            <p className='exploreCategoryName'>Places for sale</p>
           </Link>
         </div>
       </main>
-      {/* <AllListings /> */}
+      {/* alllistings */}
     </div>
-  );
+  )
 }
