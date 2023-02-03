@@ -10,10 +10,11 @@ import SignUp from "./pages/SignUp";
 import PrivateRoute from "./components/PrivateRoute";
 import ForgotPassword from "./pages/ForgotPassword";
 import Category from "./pages/Category";
-import AllListings from "./pages/AllListings";
+import AllListings from "./components/AllListings";
 import CreateListingPage from "./pages/CreateListingPage";
 import Listing from "./pages/Listing";
 import Contact from "./pages/Contact";
+import EditListing from "./components/EditListing";
 
 function App() {
   return (
@@ -38,14 +39,12 @@ function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/create-listing" element={<CreateListingPage />} />
+          <Route path="/edit-Listing/:listingId" element={<EditListing />} />
           <Route
             path="/category/:categoryName/:listingId"
             element={<Listing />}
           />
-          <Route
-            path="/contact/:landlordId"
-            element={<Contact />}
-          />
+          <Route path="/contact/:landlordId" element={<Contact />} />
         </Routes>
         {/* navbar component */}
         <Navbar />

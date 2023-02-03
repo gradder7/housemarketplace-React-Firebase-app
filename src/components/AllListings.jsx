@@ -1,24 +1,21 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import {
   collection,
   getDocs,
   query,
-  where,
   orderBy,
   limit,
 } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { toast } from "react-toastify";
-import Spinner from "../components/Spinner";
-import ListingItem from "../components/ListingItem";
+import Spinner from "./Spinner";
+import ListingItem from "./ListingItem";
 
 export default function AllListings() {
+  // eslint-disable-next-line
   const [listings, setListings] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const params = useParams();
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -28,11 +25,7 @@ export default function AllListings() {
 
         //create a query
         //where(check and compare value though which data should be filterd)
-        const q = query(
-          listingsRef,
-          orderBy("timestamp", "desc"),
-          limit(10)
-        );
+        const q = query(listingsRef, orderBy("timestamp", "desc"), limit(10));
 
         //execute the query
         const querySnap = await getDocs(q);
@@ -62,7 +55,7 @@ export default function AllListings() {
   return (
     <div className="category">
       <header>
-      <h1>ALL</h1>
+        <h1>ALL</h1>
       </header>
 
       {loading ? (

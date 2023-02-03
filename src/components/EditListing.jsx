@@ -10,15 +10,16 @@ import {
 // unique id
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../firebase.config";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { serverTimestamp, doc, updateDoc, getDoc } from "firebase/firestore";
+import { useNavigate, useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 
-export default function CreateListingPage() {
+export default function EditListing() {
   // eslint-disable-next-line
   const [geolocationEnabled, setGeolocationEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [listing, setListing] = useState(null);
   const [formData, setFormData] = useState({
     type: "rent",
     name: "",
@@ -53,7 +54,36 @@ export default function CreateListingPage() {
   const auth = getAuth();
   const navigate = useNavigate();
   const isMounted = useRef();
+  const params = useParams();
 
+  //redirect if listing is not own by current user
+  useEffect(() => {
+    if (listing && listing.userRef !== auth.currentUser.uid) {
+      toast.error("You can not edit that listing");
+      navigate("/");
+    }
+  });
+  //fetch listing
+  // Fetch listing to edit
+  useEffect(() => {
+    setLoading(true);
+    const fetchListing = async () => {
+      const docRef = doc(db, "listings", params.listingId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setListing(docSnap.data());
+        setFormData({ ...docSnap.data(), address: docSnap.data().location });
+        setLoading(false);
+      } else {
+        navigate("/");
+        toast.error("Listing does not exist");
+      }
+    };
+
+    fetchListing();
+  }, [params.listingId, navigate]);
+
+  //   getting the user and sets the user ref to logged in user
   useEffect(() => {
     if (isMounted) {
       // user getting from here
@@ -147,8 +177,8 @@ export default function CreateListingPage() {
               case "running":
                 console.log("Upload is running");
                 break;
-              default:
-                break;
+                default:
+                    break;
             }
           },
           (error) => {
@@ -188,7 +218,9 @@ export default function CreateListingPage() {
     formDataCopy.location = address;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
 
-    const docRef = await addDoc(collection(db, "listings"), formDataCopy);
+    //update listing
+    const docRef = doc(db, "listings", params.listingId);
+    await updateDoc(docRef, formDataCopy);
     setLoading(false);
     toast.success("Listing saved");
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
@@ -231,7 +263,7 @@ export default function CreateListingPage() {
   return (
     <div className="profile">
       <header>
-        <p className="pageHeader">Create a Listing</p>
+        <p className="pageHeader">Edit a Listing</p>
       </header>
 
       <main>
@@ -458,7 +490,7 @@ export default function CreateListingPage() {
             required
           />
           <button type="submit" className="primaryButton createListingButton">
-            Create Listing
+            Edit Listing
           </button>
         </form>
       </main>
